@@ -10,13 +10,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@apollo/gateway": "^0.26.1",
+    "@apollo/gateway": "^0.28.2",
     "apollo-opentracing": "^2.1.0",
-    "apollo-server": "^2.23.0",
-    "global-agent": "^2.2.0",
-    "graphql": "^15.5.0"
-  },
-  "devDependencies": {
-    "apollo": "^2.32.11"
+    "apollo-server": "^2.24.1",
+    "global-agent": "^2.2.0"
   }
 }
