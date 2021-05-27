@@ -1,0 +1,49 @@
+type Query {
+    shows(titleFilter: String, showFilter: ShowFilter): [Show]
+    foo: [Foo]
+}
+
+type Mutation {
+    addRating(rating: RatingInput): Show
+}
+
+type Show @key(fields: "id") {
+    id: ID!
+    title: String
+    director: String
+    releaseYear: Int
+    genre: ShowGenre
+    actors: [Actor]
+    averageRating: Float
+}
+
+type Actor {
+    name: String
+}
+
+type Rating {
+    stars: Int
+}
+
+type Foo {
+    id: ID!
+    bar: Bar
+}
+
+type Bar @key(fields: "id") @extends {
+    id: ID! @external
+}
+
+input ShowFilter {
+    director: String
+    showGenre: ShowGenre
+}
+
+input RatingInput {
+    showId: ID!
+    stars: Int!
+}
+
+enum ShowGenre {
+    COMEDY, ACTION, THRILLER, HORROR, DRAMA, SCIFI
+}
