@@ -35,3 +35,4 @@ build/
 
 ### SDKMAN ###
 .sdkmanrc
+/apollo-gateway/package-lock.json
