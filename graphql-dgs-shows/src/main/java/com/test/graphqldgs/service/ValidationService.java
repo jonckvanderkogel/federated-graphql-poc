@@ -18,9 +18,9 @@ import static java.util.stream.Collectors.toList;
 public class ValidationService {
     private final static Validator VALIDATOR = Validation.buildDefaultValidatorFactory().getValidator();
     
-    public <T, U> Either<GraphQLError, U> performValidatedCall(T arg, Function<T, U> fun) {
+    public static <T> Either<GraphQLError, T> validate(T arg) {
         var validationResult = VALIDATOR.validate(arg);
-        return validationResult.isEmpty() ? Either.right(fun.apply(arg)) : Either.left(
+        return validationResult.isEmpty() ? Either.right(arg) : Either.left(
                     newBuilder()
                             .errorType(ErrorType.BAD_REQUEST)
                             .message(validationResult

@@ -17,6 +17,8 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import com.test.utils.DataFetcherUtil;
+
+import static com.test.graphqldgs.service.ValidationService.validate;
 import static com.test.utils.DataFetcherUtil.*;
 
 @Slf4j
@@ -65,10 +67,12 @@ public class ShowsDataFetcher {
 
     @DgsData(parentType = "Mutation", field = "addRating")
     public DataFetcherResult<Show> addRating(@InputArgument RatingInput rating) {
-        return createDataFetcherResult(
-                validationService
-                        .performValidatedCall(rating, showService::addRating)
-        );
+        return validate(rating)
+            .map(showService::addRating)
+            .fold(
+                errorFun(),
+                successFun()
+            );
     }
     
     private Predicate<Show> createTitlePredicate(String titleFilter) {
