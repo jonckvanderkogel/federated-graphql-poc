@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: trips
+
+server:
+  port: 8082
+

@@ -1,0 +1,10 @@
+type Motorcycle @key(fields: "id") @extends {
+    id: ID @external
+    trips: [Trip]
+}
+
+
+type Trip {
+    from: String
+    to: String
+}
