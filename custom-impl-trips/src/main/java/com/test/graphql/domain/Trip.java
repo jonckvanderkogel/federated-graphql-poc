@@ -1,4 +1,6 @@
 package com.test.graphql.domain;
 
-public record Trip(String from, String to) {
+import java.util.List;
+
+public record Trip(String from, String to, List<Person> companions) {
 }

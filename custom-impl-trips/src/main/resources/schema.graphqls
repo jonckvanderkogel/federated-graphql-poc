@@ -1,10 +1,19 @@
 type Motorcycle @key(fields: "id") @extends {
     id: ID @external
-    trips: [Trip]
+    brand: Brand @external
+    trips: [Trip] @requires(fields: "brand")
 }
-
 
 type Trip {
     from: String
     to: String
+    companions: [Person]
+}
+
+type Person {
+    name: String
+}
+
+enum Brand {
+    APRILLA, BMW, DUCATI, HARLEY_DAVIDSON, HONDA, INDIAN, KAWASAKI, KTM, ROYAL_ENFIELD, SUZUKI, TRIUMPH, YAMAHA
 }

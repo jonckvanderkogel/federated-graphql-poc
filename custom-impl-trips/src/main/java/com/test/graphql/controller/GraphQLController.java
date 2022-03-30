@@ -1,10 +1,12 @@
 package com.test.graphql.controller;
 
 import com.test.graphql.datafetcher.TripsDataLoader;
+import com.test.graphql.domain.Brand;
 import com.test.graphql.domain.Trip;
 import graphql.ExecutionInput;
 import graphql.ExecutionResult;
 import graphql.GraphQL;
+import io.vavr.Tuple2;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dataloader.DataLoader;
@@ -37,7 +39,7 @@ public class GraphQLController {
             contextMap.put(FEDERATED_TRACING_HEADER_NAME, federatedTracingHeaderValue);
         }
         log.info(String.format("Context: %s", contextMap));
-        DataLoader<Long, List<Trip>> tripsDataLoader = DataLoaderFactory.newMappedDataLoader(tripsDataLoaderSupplier.get());
+        DataLoader<Tuple2<Long, Brand>, List<Trip>> tripsDataLoader = DataLoaderFactory.newMappedDataLoader(tripsDataLoaderSupplier.get());
         DataLoaderRegistry registry = new DataLoaderRegistry();
         registry.register("trips", tripsDataLoader);
 

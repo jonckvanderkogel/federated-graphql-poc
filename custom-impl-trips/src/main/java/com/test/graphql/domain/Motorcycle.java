@@ -11,14 +11,15 @@ import java.util.Map;
 @Getter
 public class Motorcycle {
     private final long id;
+    private final Brand brand;
     @Setter
     private List<Trip> trips;
 
     public static Motorcycle generateMotorcycle(Map<String, Object> reference) {
-        if (!(reference.get("id") instanceof final String id)) {
+        if (!(reference.get("id") instanceof final String id) || !(reference.get("brand") instanceof final String brand)) {
             return null;
         }
 
-        return new Motorcycle(Long.parseLong(id));
+        return new Motorcycle(Long.parseLong(id), Brand.fromString(brand));
     }
 }
