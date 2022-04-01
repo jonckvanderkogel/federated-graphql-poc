@@ -4,12 +4,15 @@ import com.apollographql.federation.graphqljava.Federation;
 import com.apollographql.federation.graphqljava._Entity;
 import com.apollographql.federation.graphqljava.tracing.FederatedTracingInstrumentation;
 import com.test.graphql.domain.Motorcycle;
+import com.test.graphql.entityresolver.EntityDataFetcher;
 import com.test.tailrecursion.TailCall;
 import graphql.GraphQL;
 import graphql.schema.GraphQLSchema;
 import graphql.schema.idl.RuntimeWiring;
 import graphql.schema.idl.SchemaParser;
 import graphql.schema.idl.TypeDefinitionRegistry;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
@@ -23,8 +26,12 @@ import java.util.stream.Collectors;
 import static com.test.tailrecursion.TailCalls.done;
 import static graphql.schema.idl.TypeRuntimeWiring.newTypeWiring;
 
+@Slf4j
 @Configuration
+@RequiredArgsConstructor
 public class GraphQLProvider {
+    private final EntityDataFetcher entityDataFetcher;
+
     @Bean
     public GraphQL graphQL(GraphQLSchema schema) {
         return GraphQL
@@ -41,22 +48,13 @@ public class GraphQLProvider {
         TypeDefinitionRegistry typeRegistry = new SchemaParser().parse(sdl);
 
         return Federation.transform(typeRegistry, runtimeWiring)
-            .fetchEntities(
-                env ->
-                    env.<List<Map<String, Object>>>getArgument(_Entity.argumentName).stream()
-                        .map(
-                            reference -> {
-                                if ("Motorcycle".equals(reference.get("__typename"))) {
-                                    return Motorcycle.generateMotorcycle(reference);
-                                }
-                                return null;
-                            })
-                        .collect(Collectors.toList()))
+            .fetchEntities(entityDataFetcher)
             .resolveEntityType(
                 env -> {
-                    final Object src = env.getObject();
-                    if (src instanceof Motorcycle) {
-                        return env.getSchema().getObjectType("Motorcycle");
+                    final String src = env.getObject().getClass().getSimpleName();
+
+                    if (env.getSchema().containsType(src)) {
+                        return env.getSchema().getObjectType(src);
                     }
                     return null;
                 })

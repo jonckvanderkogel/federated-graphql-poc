@@ -5,14 +5,12 @@ import com.test.graphql.domain.Brand;
 import com.test.graphql.domain.Person;
 import com.test.graphql.domain.Trip;
 import io.vavr.Tuple2;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-@Slf4j
 @Service
 public class TripService {
     private static final Faker FAKER = new Faker();
@@ -39,7 +37,6 @@ public class TripService {
     }
 
     public Map<Tuple2<Long, Brand>, List<Trip>> getTripsBatch(Set<Tuple2<Long, Brand>> references) {
-        log.info("Calling batch trip service");
         return references
             .stream()
             .map(s -> new Tuple2<>(s, getTrips(s)))

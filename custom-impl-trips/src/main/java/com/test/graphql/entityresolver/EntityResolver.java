@@ -1,4 +1,9 @@
 package com.test.graphql.entityresolver;
 
-public interface EntityResolver {
+import java.util.Map;
+
+public interface EntityResolver<T> {
+    T resolveEntity(Map<String, Object> reference);
+
+    String getTypename();
 }
