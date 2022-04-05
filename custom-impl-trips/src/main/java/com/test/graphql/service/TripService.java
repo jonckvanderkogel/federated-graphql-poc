@@ -16,7 +16,7 @@ public class TripService {
     private static final Faker FAKER = new Faker();
     private final Map<Long, List<Trip>> database = new HashMap<>();
     private final Map<Brand, List<Person>> brandFansDatabase = new HashMap<>();
-    private static SplittableRandom RANDOM = new SplittableRandom();
+    private static final SplittableRandom RANDOM = new SplittableRandom();
 
     public List<Trip> getTrips(Tuple2<Long, Brand> reference) {
         return database

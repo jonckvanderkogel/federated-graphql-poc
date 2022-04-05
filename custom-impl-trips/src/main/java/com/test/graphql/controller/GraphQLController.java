@@ -28,7 +28,7 @@ import java.util.function.Supplier;
 @RequiredArgsConstructor
 public class GraphQLController {
     private final GraphQL graphQL;
-    private final Supplier<TripsDataLoader> tripsDataLoaderSupplier;
+    private final Supplier<DataLoaderRegistry> dataLoaderRegistrySupplier;
     public static final String FEDERATED_TRACING_HEADER_NAME = "apollo-federation-include-trace";
 
     @PostMapping(path = "/graphql")
@@ -39,14 +39,11 @@ public class GraphQLController {
             contextMap.put(FEDERATED_TRACING_HEADER_NAME, federatedTracingHeaderValue);
         }
         log.info(String.format("Context: %s", contextMap));
-        DataLoader<Tuple2<Long, Brand>, List<Trip>> tripsDataLoader = DataLoaderFactory.newMappedDataLoader(tripsDataLoaderSupplier.get());
-        DataLoaderRegistry registry = new DataLoaderRegistry();
-        registry.register("trips", tripsDataLoader);
 
         ExecutionInput executionInput = ExecutionInput.newExecutionInput()
             .graphQLContext(contextMap)
             .query(graphQLRequest.getQuery())
-            .dataLoaderRegistry(registry)
+            .dataLoaderRegistry(dataLoaderRegistrySupplier.get())
             .variables(graphQLRequest.getVariables())
             .operationName(graphQLRequest.getOperationName())
             .build();
