@@ -31,7 +31,7 @@ public class GraphQLController {
         if (federatedTracingHeaderValue != null) {
             contextMap.put(FEDERATED_TRACING_HEADER_NAME, federatedTracingHeaderValue);
         }
-        log.info(String.format("Context: %s", contextMap));
+        log.info(String.format("Query: %s", graphQLRequest.getQuery()));
 
         ExecutionInput executionInput = ExecutionInput.newExecutionInput()
             .graphQLContext(contextMap)
@@ -41,8 +41,11 @@ public class GraphQLController {
             .operationName(graphQLRequest.getOperationName())
             .build();
 
-        ExecutionResult result = graphQL.execute(executionInput);
-
-        return Mono.just(result.toSpecification());
+        return Mono
+            .fromCompletionStage(
+                graphQL
+                    .executeAsync(executionInput)
+                    .thenApply(ExecutionResult::toSpecification)
+            );
     }
 }

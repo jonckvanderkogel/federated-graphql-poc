@@ -13,7 +13,7 @@ import java.util.function.Supplier;
 
 @Configuration
 @RequiredArgsConstructor
-public class DatafetcherConfiguration {
+public class DataLoaderConfiguration {
 
     @Bean
     public Supplier<DataLoaderRegistry> dataLoaderRegistrySupplier(List<NamedDataLoader<?,?>> namedDataLoaders) {
